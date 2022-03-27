@@ -27,7 +27,7 @@ provider "aws" {
 }
 
 
-// website bucket
+// static website bucket
 
 resource "aws_s3_bucket" "s3Bucket" {
   bucket = var.BUCKET
