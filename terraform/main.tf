@@ -5,17 +5,13 @@ terraform {
     key            = "terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "statelock-tf"
+    encrypt        = true
   }
 }
 
-/*
-terraform {
-  required_version = ">=0.14.9"
-}*/
 
 provider "aws" {
-  version = "~>3.0"
-  region  = "us-east-1"
+  region = "us-east-1"
 }
 
 
