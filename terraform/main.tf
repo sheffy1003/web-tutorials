@@ -17,31 +17,37 @@ provider "aws" {
   region = "us-east-1"
 }
 
-
 // static website bucket
 
 resource "aws_s3_bucket" "s3Bucket" {
   bucket = var.BUCKET
   acl    = "public-read"
 
-  policy = <<EOF
-  {
-     "id" : "MakePublic",
-   "version" : "2012-10-17",
-   "statement" : [
-      {
-         "action" : [
-             "s3:GetObject"
-          ],
-         "effect" : "Allow",
-         "resource" : "arn:aws:s3:::${var.BUCKET}/*",
-         "principal" : "*"
-      }
-    ]
-  }
-  EOF
+  policy = data.aws_iam_policy_document.public.json
 
   website {
     index_document = "index.html"
+  }
+}
+
+
+// Public policy
+
+data "aws_iam_policy_document" "public" {
+  statement {
+    sid = "MakePublic"
+
+    actions = [
+      "s3:GetObject"
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.BUCKET}/*",
+    ]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
   }
 }
