@@ -1,10 +1,10 @@
 
 terraform {
   backend "s3" {
-    bucket         = "stackbuckstate-sheff"
+    bucket         = "tutorialstatebuck"
     key            = "terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "statelock-tf"
+    dynamodb_table = "statelock-tutorial"
     encrypt        = true
   }
 }
