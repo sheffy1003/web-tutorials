@@ -1,5 +1,5 @@
 
 variable "BUCKET" {
   type    = string
-  default = "tutorial"
+  default = "hl-web-tutorial"
 }
