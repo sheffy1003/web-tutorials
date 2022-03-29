@@ -46,13 +46,15 @@ jobs:
             terraform workspace select sandbox || terraform workspace new sandbox
             terraform apply --auto-approve tfplan
 
-      - name: Upload Content
+      - name: Configure AWS CLI
       - id: install-aws-cli
         uses: unfor19/install-aws-cli-action@v1.0.2
         with:
           version: 2     # default
           verbose: false # default
           arch: amd64    # allowed values: amd64, arm64
+
+      - name: Upload content
       - run: |
             cd src
             aws s3 sync . s3://hl-web-tutorial/
