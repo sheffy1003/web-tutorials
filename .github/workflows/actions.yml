@@ -28,6 +28,11 @@ jobs:
     - name: Terraform Validate
       uses: hashicorp/terraform-github-actions/validate@v0.3.7
 
+    - name: Terraform Format
+      run: terraform fmt -check
+      env:
+        TF_ACTION_WORKING_DIR: 'terraform'
+
     - name: Terraform Apply
       uses: hashicorp/terraform-github-actions/apply@v0.4.0
       env:
