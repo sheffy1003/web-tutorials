@@ -23,10 +23,10 @@ jobs:
           role-duration-seconds: 1200
           role-session-name: 'github-actions'
 
-      - name: Terraform Validate
+      - name: Terraform Init
         run: |
             cd terraform && terraform workspace select sandbox
-            terraform validate && terraform init
+            terraform init
 
       - name: Terraform Format
         run: |
