@@ -2,7 +2,7 @@
 terraform {
   backend "s3" {
     bucket         = "tutorialstatebuck"
-    key            = "testing/terraform.tfstate"
+    key            = "ci/testing/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "statelock-tutorial"
     encrypt        = true
