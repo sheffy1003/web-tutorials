@@ -1,4 +1,4 @@
-/*
+
 output "bucket_url" {
   value = [
     aws_s3_bucket.s3Bucket.website_domain,
@@ -6,4 +6,3 @@ output "bucket_url" {
     aws_s3_bucket.s3Bucket.website
   ]
 }
-*/
