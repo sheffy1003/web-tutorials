@@ -18,7 +18,7 @@ provider "aws" {
 }
 
 // static website bucket
-
+/*
 resource "aws_s3_bucket" "s3Bucket" {
   bucket = var.BUCKET
   acl    = "public-read"
@@ -51,3 +51,5 @@ data "aws_iam_policy_document" "public" {
     }
   }
 }
+
+*/
