@@ -10,6 +10,8 @@ on:
 
 jobs:
   sandbox:
+    env: 
+      evironment: sandbox
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,6 +25,14 @@ jobs:
           role-duration-seconds: 1200
           role-session-name: 'github-actions'
 
+      - name: Configure AWS CLI
+        id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1.0.2
+        with:
+          version: 2     # default
+          verbose: false # default
+          arch: amd64    # allowed values: amd64, arm64
+      
       - name: Terraform Init
         run: |
             cd terraform
@@ -36,7 +46,7 @@ jobs:
       - name: Terraform Plan
         run: |
             cd terraform
-            terraform workspace select sandbox || terraform workspace new sandbox
+            terraform workspace select {{ env.environment }} || terraform workspace new {{ env.environment }}
             terraform plan -out=tfplan
 
       - name: Terraform Apply
@@ -46,15 +56,7 @@ jobs:
             terraform workspace select sandbox || terraform workspace new sandbox
             terraform apply --auto-approve tfplan
 
-      - name: Configure AWS CLI
-        id: install-aws-cli
-        uses: unfor19/install-aws-cli-action@v1.0.2
-        with:
-          version: 2     # default
-          verbose: false # default
-          arch: amd64    # allowed values: amd64, arm64
-
-      - name: Upload Content
+      - name: Upload Web Content
         run: |
             cd src
             aws s3 sync . s3://hl-web-tutorial/
