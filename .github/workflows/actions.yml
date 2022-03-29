@@ -21,7 +21,7 @@ jobs:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.ROLE_ARN }}
           role-duration-seconds: 1200
-          role-session-name: github-actions
+          role-session-name: 'github-actions'
 
       - name: Terraform Validate
         uses: hashicorp/terraform-github-actions/validate@v0.3.7
