@@ -1,3 +1,66 @@
+
+name: Deploy Tutorial Website
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  sandbox:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: 'terraform'
+      TF_WORKSPACE: 'sandbox'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          role-duration-seconds: 1200
+          role-session-name: github-actions
+
+      - name: Terraform Validate
+        uses: hashicorp/terraform-github-actions/validate@v0.3.7
+        env:
+          TF_ACTION_WORKING_DIR: ${{ env.working-directory }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terraform Plan
+        uses: hashicorp/terraform-github-actions/plan@v0.4.0
+        env:
+          TF_ACTION_WORKING_DIR: ${{ env.working-directory }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terraform Apply
+        if: github.event_name == 'pull_request'
+        uses: hashicorp/terraform-github-actions/apply@v0.4.0
+        env:
+          TF_ACTION_WORKING_DIR: ${{ env.working-directory }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync S3
+        uses: jakejarvis/s3-sync-action@master
+        env:
+          SOURCE_DIR: './src'
+          AWS_REGION: 'us-east-1'
+          AWS_S3_BUCKET: 'hl-web-tutorial'
+
+
+
+
+
+
+
+
+
+"""
 name: Tutorial Web
 
 on:
@@ -49,3 +112,5 @@ jobs:
         AWS_S3_BUCKET: 'hl-web-tutorial'
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+"""
