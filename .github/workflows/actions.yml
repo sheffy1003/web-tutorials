@@ -1,5 +1,5 @@
 
-name: Deploy web Tutorial
+name: Deploy website Tutorial
 on:
   push:
     branches:
