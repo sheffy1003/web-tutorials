@@ -46,12 +46,16 @@ jobs:
             terraform workspace select sandbox || terraform workspace new sandbox
             terraform apply --auto-approve tfplan
 
-      - name: Sync S3
-        uses: jakejarvis/s3-sync-action@master
-        env:
-          SOURCE_DIR: './src'
-          AWS_REGION: 'us-east-1'
-          AWS_S3_BUCKET: 'hl-web-tutorial'
+      - name: Upload Content
+      - id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1.0.2
+        with:
+          version: 2     # default
+          verbose: false # default
+          arch: amd64    # allowed values: amd64, arm64
+      - run: |
+            cd src
+            aws s3 sync . s3://hl-web-tutorial/
 
 
 
