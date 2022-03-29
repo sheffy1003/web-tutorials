@@ -28,18 +28,17 @@ jobs:
         uses: unfor19/install-aws-cli-action@v1.0.2
         with:
           version: 2     # default
-          verbose: false # default
+          verbose: true # default
           arch: amd64    # allowed values: amd64, arm64
       
       - name: Terraform Init
         run: |
-            cd terraform
-            terraform init
+            cd terraform && terraform init
 
-      - name: Terraform Format
+      - name: Terraform Check
         run: |
-            cd terraform
-            terraform fmt -check
+            cd terraform && terraform fmt -check
+            terraform validate
 
       - name: Terraform Plan
         if: github.event_name == 'pull_request'
