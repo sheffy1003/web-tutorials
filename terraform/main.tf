@@ -2,7 +2,7 @@
 terraform {
   backend "s3" {
     bucket         = "tutorialstatebuck"
-    key            = "terraform.tfstate"
+    key            = "testing/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "statelock-tutorial"
     encrypt        = true
@@ -19,18 +19,34 @@ provider "aws" {
 
 // static website bucket
 
-resource "aws_s3_bucket" "s3Bucket" {
+resource "aws_s3_bucket" "bk" {
   bucket = var.BUCKET
-  acl    = "public-read"
-
-  policy = data.aws_iam_policy_document.public.json
-
-  website {
-    index_document = "index.html"
+  tags = {
+    "env" = "sandbox"
   }
 }
 
+resource "aws_s3_bucket_acl" "cl" {
+  bucket = aws_s3_bucket.bk.id
+  acl    = "public-read"
+}
 
+resource "aws_s3_bucket_policy" "py" {
+ bucket = aws_s3_bucket.bk.id
+  policy = data.aws_iam_policy_document.public.json
+}
+
+resource "aws_s3_bucket_website_configuration" "wb" {
+  bucket = aws_s3_bucket.bk.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
+  }
+}
 // Public policy
 
 data "aws_iam_policy_document" "public" {
