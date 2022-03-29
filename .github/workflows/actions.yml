@@ -26,7 +26,7 @@ jobs:
       - name: Terraform Validate
         run: |
             cd terraform && terraform workspace select sandbox
-            terraform validate
+            terraform validate && terraform init
 
       - name: Terraform Format
         run: |
