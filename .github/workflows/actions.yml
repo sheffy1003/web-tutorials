@@ -10,8 +10,6 @@ on:
 
 jobs:
   sandbox:
-    env: 
-      evironment: sandbox
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +44,7 @@ jobs:
       - name: Terraform Plan
         run: |
             cd terraform
-            terraform workspace select {{ env.environment }} || terraform workspace new {{ env.environment }}
+            terraform workspace select sandbox || terraform workspace new sandbox
             terraform plan -out=tfplan
 
       - name: Terraform Apply
