@@ -1,12 +1,6 @@
 
 name: Deploy Tutorial
-on:
-  push:
-    branches:
-      - '*'
-  pull_request:
-    branches:
-      - '*'
+on: [workflow_dispatch]
 
 jobs:
   sandbox:
@@ -48,14 +42,14 @@ jobs:
             terraform plan -out=tfplan
 
       - name: Terraform Apply
-        if: github.event_name == 'merge'
+        if: github.event_name == 'push'
         run: |
             cd terraform
             terraform workspace select sandbox || terraform workspace new sandbox
-            terraform apply --auto-approve tfplan
+            terraform destroy --auto-approve tfplan
 
       - name: Upload Web Content
-        if: github.event_name == 'merge'
+        if: github.event_name == 'push'
         run: |
             cd src
             aws s3 sync . s3://hl-web-tutorial/

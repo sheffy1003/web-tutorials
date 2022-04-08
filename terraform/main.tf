@@ -20,36 +20,41 @@ provider "aws" {
 // static website bucket
 
 resource "aws_s3_bucket" "bk" {
-  bucket = var.BUCKET
+  for_each = var.config
+  bucket   = each.value.value.bucket #var.bucket
   tags = {
-    "env" = "sandbox"
+    "env" = each.value.key
   }
 }
 
 resource "aws_s3_bucket_acl" "cl" {
-  bucket = aws_s3_bucket.bk.id
-  acl    = "public-read"
+  for_each = var.config
+  bucket   = aws_s3_bucket.bk[each.value.key].id
+  acl      = each.value.value.acl #"public-read"
 }
 
 resource "aws_s3_bucket_policy" "py" {
-  bucket = aws_s3_bucket.bk.id
-  policy = data.aws_iam_policy_document.public.json
+  for_each = var.config
+  bucket   = aws_s3_bucket.bk[each.value.key].id # aws_s3_bucket.bk.id
+  policy   = data.aws_iam_policy_document.public[each.value.key].json
 }
 
 resource "aws_s3_bucket_website_configuration" "wb" {
-  bucket = aws_s3_bucket.bk.id
+  for_each = var.config
+  bucket   = aws_s3_bucket.bk[each.value.key].id #aws_s3_bucket.bk.id
 
   index_document {
-    suffix = "index.html"
+    suffix = each.value.value.web.index_document #"index.html"
   }
 
   error_document {
-    key = "error.html"
+    key = each.value.value.web.error_document #"error.html"
   }
 }
 // Public policy
 
 data "aws_iam_policy_document" "public" {
+  for_each = var.config
   statement {
     sid = "MakePublic"
 
@@ -58,7 +63,7 @@ data "aws_iam_policy_document" "public" {
     ]
 
     resources = [
-      "arn:aws:s3:::${var.BUCKET}/*",
+      "arn:aws:s3:::${each.value.value.bucket}/*",
     ]
 
     principals {
