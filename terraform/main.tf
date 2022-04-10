@@ -21,7 +21,7 @@ provider "aws" {
 
 resource "aws_s3_bucket" "bk" {
   for_each = var.config
-  bucket   = each.value.value.bucket #var.bucket
+  bucket   = each.value.bucket #var.bucket
   tags = {
     "env" = each.value.key
   }
@@ -30,7 +30,7 @@ resource "aws_s3_bucket" "bk" {
 resource "aws_s3_bucket_acl" "cl" {
   for_each = var.config
   bucket   = aws_s3_bucket.bk[each.value.key].id
-  acl      = each.value.value.acl #"public-read"
+  acl      = each.value.acl #"public-read"
 }
 
 resource "aws_s3_bucket_policy" "py" {
@@ -44,11 +44,11 @@ resource "aws_s3_bucket_website_configuration" "wb" {
   bucket   = aws_s3_bucket.bk[each.value.key].id #aws_s3_bucket.bk.id
 
   index_document {
-    suffix = each.value.value.web.index_document #"index.html"
+    suffix = each.value.web.index_document #"index.html"
   }
 
   error_document {
-    key = each.value.value.web.error_document #"error.html"
+    key = each.value.web.error_document #"error.html"
   }
 }
 // Public policy
@@ -63,7 +63,7 @@ data "aws_iam_policy_document" "public" {
     ]
 
     resources = [
-      "arn:aws:s3:::${each.value.value.bucket}/*",
+      "arn:aws:s3:::${each.value.bucket}/*",
     ]
 
     principals {
