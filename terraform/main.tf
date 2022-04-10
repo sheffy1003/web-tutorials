@@ -23,7 +23,7 @@ resource "aws_s3_bucket" "bk" {
   for_each = var.config
   bucket   = each.value.bucket #var.bucket
   tags = {
-    "env" = each.value.key
+    "env" = each.key
   }
 }
 
