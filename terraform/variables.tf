@@ -6,16 +6,15 @@ variable "bucket" {
 
 
 variable "config" {
-  type = map(map(object({
+  type = map(object({
     bucket = string
     acl    = string
     web = object({
       index_document = string
       error_document = string
     })
-  })))
+  }))
   default = {
-    tutorial = {
       sandbox = {
         acl    = "private"
         bucket = "hl-sandbox-tutorial"
@@ -49,6 +48,5 @@ variable "config" {
           index_document = "error.html"
         }
       }
-    }
   }
 }
