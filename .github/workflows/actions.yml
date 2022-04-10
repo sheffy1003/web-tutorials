@@ -43,7 +43,7 @@ jobs:
             terraform validate
 
       - name: Terraform Plan
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'push'
         run: |
             cd terraform
             terraform workspace select sandbox || terraform workspace new sandbox
