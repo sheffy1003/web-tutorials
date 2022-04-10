@@ -29,19 +29,19 @@ resource "aws_s3_bucket" "bk" {
 
 resource "aws_s3_bucket_acl" "cl" {
   for_each = var.config
-  bucket   = aws_s3_bucket.bk[each.value.key].id
+  bucket   = aws_s3_bucket.bk[each.key].id
   acl      = each.value.acl #"public-read"
 }
 
 resource "aws_s3_bucket_policy" "py" {
   for_each = var.config
-  bucket   = aws_s3_bucket.bk[each.value.key].id # aws_s3_bucket.bk.id
-  policy   = data.aws_iam_policy_document.public[each.value.key].json
+  bucket   = aws_s3_bucket.bk[each.key].id # aws_s3_bucket.bk.id
+  policy   = data.aws_iam_policy_document.public[each.key].json
 }
 
 resource "aws_s3_bucket_website_configuration" "wb" {
   for_each = var.config
-  bucket   = aws_s3_bucket.bk[each.value.key].id #aws_s3_bucket.bk.id
+  bucket   = aws_s3_bucket.bk[each.key].id #aws_s3_bucket.bk.id
 
   index_document {
     suffix = each.value.web.index_document #"index.html"
