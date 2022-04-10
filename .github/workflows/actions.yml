@@ -57,7 +57,7 @@ jobs:
             terraform apply --auto-approve tfplan
 
       - name: Upload Web Content
-        if: github.event_name == 'push'
+        if: github.event.inputs.deploy-prod == 'y'
         run: |
             cd src
             aws s3 sync . s3://hl-web-tutorial/
