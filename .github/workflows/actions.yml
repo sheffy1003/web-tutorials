@@ -54,6 +54,7 @@ jobs:
         run: |
             cd terraform
             terraform workspace select sandbox || terraform workspace new sandbox
+            terraform plan -out=tfplan
             terraform apply --auto-approve tfplan
 
       - name: Upload Web Content
