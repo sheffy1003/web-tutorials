@@ -1,5 +1,6 @@
 
 name: Deploy Tutorial
+
 on:
   push:
     branches: 
@@ -9,7 +10,6 @@ on:
       deploy-prod:
         description: 'approve final deployment (y/n)'
         required: true
-
 jobs:
   sandbox:
     runs-on: ubuntu-latest
