@@ -1,6 +1,14 @@
 
 name: Deploy Tutorial
-on: [workflow_dispatch]
+on:
+  push:
+    branches: 
+      - '*'
+  workflow_dispatch:
+    inputs:
+      deploy-prod:
+        description: 'approve final deployment (y/n)'
+        required: true
 
 jobs:
   sandbox:
@@ -42,11 +50,11 @@ jobs:
             terraform plan -out=tfplan
 
       - name: Terraform Apply
-        if: github.event_name == 'push'
+        if: github.event.inputs.deploy-prod == 'y'
         run: |
             cd terraform
             terraform workspace select sandbox || terraform workspace new sandbox
-            terraform destroy --auto-approve tfplan
+            terraform apply --auto-approve tfplan
 
       - name: Upload Web Content
         if: github.event_name == 'push'
