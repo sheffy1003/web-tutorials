@@ -1,5 +1,5 @@
 
-name: Deploy Tutorial
+name: Deploy static website
 
 on:
   push:
@@ -12,6 +12,9 @@ on:
         required: true
 jobs:
   sandbox:
+    strategy:
+      matrix:
+        env: [sandbox, qa, stage, prod]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -46,14 +49,14 @@ jobs:
         if: github.event_name == 'push'
         run: |
             cd terraform
-            terraform workspace select sandbox || terraform workspace new sandbox
+            terraform workspace select ${{ matrix.env }} || terraform workspace new ${{ matrix.env }}
             terraform plan -out=tfplan
 
       - name: Terraform Apply
         if: github.event.inputs.deploy-prod == 'y'
         run: |
             cd terraform
-            terraform workspace select sandbox || terraform workspace new sandbox
+            terraform workspace select ${{ matrix.env }} || terraform workspace new ${{ matrix.env }}
             terraform plan -out=tfplan
             terraform apply --auto-approve tfplan
 
@@ -61,7 +64,7 @@ jobs:
         if: github.event.inputs.deploy-prod == 'y'
         run: |
             cd src
-            aws s3 sync . s3://hl-web-tutorial/
+            aws s3 sync . s3://hl-${{ matrix.env }}-tutorial/
 
 
 
